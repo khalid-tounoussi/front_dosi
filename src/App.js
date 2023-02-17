@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { Delete, Edit, South } from '@mui/icons-material';
 
-const IP_ADRESS = "http://localhost:8989";
+const IP_ADRESS = "https://backend-dosi.herokuapp.com";
 
 const Example = () => {
   //data and fetching state
@@ -36,7 +36,6 @@ const Example = () => {
 
   //if you want to avoid useEffect, look at the React Query example instead
   useEffect(() => {
-    console.log("USE EFFECT IS called");
     const fetchData = async () => {
       if (!data.length) {
         setIsLoading(true);
@@ -52,10 +51,8 @@ const Example = () => {
       );
 
       try {
-        console.log(url.href)
         const response = await fetch(url.href);
         const json = await response.json();
-        console.log(json._embedded.users);
         setData(json._embedded.users);
         setRowCount(json.page.size);
       } catch (error) {
@@ -76,23 +73,16 @@ const Example = () => {
   const [validationErrors, setValidationErrors] = useState({});
 
   const handleCreateNewRow = (values) => {
-    console.log("THIS IS CALLED");
-    console.log(values);
     tableData.push(values);
     data.push(values);
     setTableData(tableData);
     setData(data);
     setTableData([...tableData]);
-    console.log(tableData);
-    console.log(data);
-
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
-      console.log(row)
       tableData[row.index] = values;
-
       const requestOptions = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -118,7 +108,6 @@ const Example = () => {
 
   const handleDeleteRow = useCallback(
     (row) => {
-      console.log(row.original);
       const fetchData = async () => {
         if (!data.length) {
           setIsLoading(true);
@@ -134,10 +123,8 @@ const Example = () => {
         );
 
         try {
-          console.log(url.href);
           const response = await fetch(url.href);
           const json = await response.json();
-          console.log(json._embedded.users);
           setData(json._embedded.users);
           setRowCount(json.page.size);
         } catch (error) {
@@ -156,7 +143,7 @@ const Example = () => {
         return;
       }
       //send api delete request here, then refetch or update local table data for re-render
-      fetch('http://localhost:8090/users/' + row.original.id, { method: 'DELETE' }).then((resp) => {
+      fetch(IP_ADRESS, '/users/' + row.original.id, { method: 'DELETE' }).then((resp) => {
         fetchData();
 
       });
@@ -291,7 +278,6 @@ export const CreateNewAccountModal = ({ open, columns, onClose, onSubmit }) => {
         return response.json();
       })
       .then(function (data) {
-        console.log(data)
         onSubmit(data);
         onClose();
       })
