@@ -45,9 +45,7 @@ const Example = () => {
 
       const url = new URL(
         '/users?size=1000',
-        process.env.NODE_ENV === 'production'
-          ? 'https://www.material-react-table.com'
-          : IP_ADRESS,
+        IP_ADRESS,
       );
 
       try {
